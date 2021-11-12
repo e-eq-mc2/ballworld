@@ -33,6 +33,8 @@ function createWindow () {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  return mainWindow
 }
 
 // This method will be called when Electron has finished
@@ -55,6 +57,8 @@ app.whenReady().then(() => {
   })
 
   globalShortcut.register('Ctrl+B', function() {
+    const windowState = win.getBounds()
+    console.log(windowState)
     // 2x 1920x1080 
     win.setSize(3840, 1080)
   })
