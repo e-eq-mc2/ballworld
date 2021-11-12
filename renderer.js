@@ -1,4 +1,5 @@
-const Matter  = require("matter-js");
+const Matter = require("matter-js");
+const Utils = require("./lib/common.js")
 
 const Engine          = Matter.Engine,
       Events          = Matter.Events,
@@ -130,10 +131,16 @@ function init ( ) {
         cloud.drop(320)
         break
       case e.key == '7':
-        cloud.drop(640)
+        cloud.drop(600)
         break
       case e.key == '8':
         cloud.drop(1000)
+        break
+      case e.key == '9':
+        cloud.drop(2000)
+        break
+      case e.key == '0':
+        cloud.drop(3000)
         break
 
       case e.key == 'c':
@@ -142,6 +149,9 @@ function init ( ) {
 
       case e.key == 'ArrowUp'    && ! e.shiftKey:
         cloud.upCurrent()
+        break
+      case e.key == 'ArrowDown'    && ! e.shiftKey:
+        cloud.downCurrent()
         break
       case e.key == 'ArrowLeft'  && ! e.shiftKey:
         cloud.leftCurrent()
@@ -152,6 +162,9 @@ function init ( ) {
 
       case e.key == 'ArrowUp'    && e.shiftKey:
         cloud.upAll()
+        break
+      case e.key == 'ArrowDown' && e.shiftKey:
+        cloud.downAll()
         break
       case e.key == 'ArrowLeft'  && e.shiftKey:
         cloud.leftAll()
@@ -172,11 +185,11 @@ class Cloud {
     this.world= world
     this.bodies = []
 
-    this.moveScale = 10
+    this.moveScale = 20
   }
 
   drop(size = 10) {
-    const x = window.innerWidth / 2
+    const x = window.innerWidth / 2 + Utils.random(-100, 100)
     const y = 0 - size * 1.2
 
     const body = Bodies.circle(x, y, size/2, {
@@ -217,6 +230,11 @@ class Cloud {
     this.moveCurrent({x: 0, y: -this.moveScale})
   }
 
+  downCurrent() {
+    this.moveCurrent({x: 0, y:  this.moveScale})
+  }
+
+
   leftCurrent() {
     this.moveCurrent({x: -this.moveScale, y: 0})
   }
@@ -227,6 +245,10 @@ class Cloud {
 
   upAll() {
     this.moveAll({x: 0, y: -this.moveScale})
+  }
+
+  downAll() {
+    this.moveAll({x: 0, y:  this.moveScale})
   }
 
   leftAll() {
@@ -246,7 +268,7 @@ class Walls {
   constructor(world, th, w = window.innerWidth, h = window.innerHeight) {
     this.thickness = th
 
-    this.shiftX = this.thickness / 2 + 100
+    this.shiftX = this.thickness / 2 + 2000
     this.world = world
 
     const baseW = w + this.shiftX*2 + this.thickness
