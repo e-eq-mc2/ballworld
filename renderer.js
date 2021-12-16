@@ -189,7 +189,8 @@ class Cloud {
   }
 
   drop(size = 10) {
-    const x = window.innerWidth / 2 + Utils.random(-100, 100)
+    const halfX = window.innerWidth 
+    const x = halfX + Utils.randomReal(-halfX * 0.7, halfX * 0.7)
     const y = 0 - size * 1.2
 
     const body = Bodies.circle(x, y, size/2, {
