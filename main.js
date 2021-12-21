@@ -32,7 +32,7 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   return mainWindow
 }
@@ -62,6 +62,15 @@ app.whenReady().then(() => {
     // 2x 1920x1080 
     win.setSize(3840, 1080)
   })
+
+  globalShortcut.register('Ctrl+H', function() {
+    const windowState = win.getBounds()
+    console.log(windowState)
+    // 2x 1920x1080 
+    win.setSize(1920, 1080)
+  })
+
+  
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

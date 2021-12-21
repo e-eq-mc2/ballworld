@@ -1,5 +1,6 @@
 const Matter = require("matter-js");
 const Utils = require("./lib/common.js")
+var Colormap = require("./lib/colormap.js")
 
 const Engine          = Matter.Engine,
       Events          = Matter.Events,
@@ -147,29 +148,42 @@ function init ( ) {
         cloud.clearAll()
         break
 
-      case e.key == 'ArrowUp'    && ! e.shiftKey:
+      case e.key == 'x':
+        cloud.changeColor('xmas')
+        break
+
+      case e.key == 'w':
+        cloud.changeColor('white')
+        break
+
+      case e.key == 'm':
+        cloud.dropMany()
+        break
+
+
+      case e.key == 'ArrowUp'    && e.shiftKey:
         cloud.upCurrent()
         break
-      case e.key == 'ArrowDown'    && ! e.shiftKey:
+      case e.key == 'ArrowDown'    && e.shiftKey:
         cloud.downCurrent()
         break
-      case e.key == 'ArrowLeft'  && ! e.shiftKey:
+      case e.key == 'ArrowLeft'  && e.shiftKey:
         cloud.leftCurrent()
         break
-      case e.key == 'ArrowRight' && ! e.shiftKey:
+      case e.key == 'ArrowRight' && e.shiftKey:
         cloud.rightCurrent()
         break
 
-      case e.key == 'ArrowUp'    && e.shiftKey:
+      case e.key == 'ArrowUp'    && !e.shiftKey:
         cloud.upAll()
         break
-      case e.key == 'ArrowDown' && e.shiftKey:
+      case e.key == 'ArrowDown' && !e.shiftKey:
         cloud.downAll()
         break
-      case e.key == 'ArrowLeft'  && e.shiftKey:
+      case e.key == 'ArrowLeft'  && !e.shiftKey:
         cloud.leftAll()
         break
-      case e.key == 'ArrowRight' && e.shiftKey:
+      case e.key == 'ArrowRight' && !e.shiftKey:
         cloud.rightAll()
         break
 
@@ -186,18 +200,40 @@ class Cloud {
     this.bodies = []
 
     this.moveScale = 20
+    this.colormap = new Colormap('white')
+  }
+
+  changeColor(name) {
+    this.colormap.set(name)
   }
 
   drop(size = 10) {
-    const halfX = window.innerWidth 
-    const x = halfX + Utils.randomReal(-halfX * 0.7, halfX * 0.7)
+    const ww = window.innerWidth 
+    const hs = size / 2
+    const x = Utils.randomReal(hs, ww - hs)
     const y = 0 - size * 1.2
 
+    const c = this.colormap.choose()
     const body = Bodies.circle(x, y, size/2, {
       restitution: 1.1,
+      render: {fillStyle: c},
     });
     World.add(this.world, body)
     this.bodies.push(body)
+  }
+
+  dropMany(num = 100) {
+    const slist = [
+      10, 10, 10, 10, 10, 10, 
+      20, 20, 20, 20, 
+      40, 80, 160
+    ]
+
+    for(let i=0; i < num; ++i) {
+      const s = Utils.pickup(slist)
+      console.log(s)
+      this.drop(s)
+    }
   }
 
   clearAll() {
